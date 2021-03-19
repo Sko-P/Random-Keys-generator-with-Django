@@ -1,0 +1,52 @@
+
+.key {
+    
+    height: 400px;
+    position: relative;
+    border: 3px solid orange;
+}
+
+img {
+    position: absolute;
+    top: 15%;
+    left: 70%;
+    width: 25%;
+    
+    border-color: white;
+}
+
+.key button  {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-color: white;
+}
+
+.key #number {
+    position : absolute;
+    width : 45px;
+    height : 20px;
+}
+
+.key #keyfield {
+    margin: 0;
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.btn-group {
+    margin: 0;
+    position: absolute;
+    top: 43%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-color: white;
+}
+
+.white-background {
+    background-color: white;
+}

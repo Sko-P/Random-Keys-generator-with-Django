@@ -1,0 +1,196 @@
+
+
+{%  extends 'rand/main.html' %}
+
+{% load static %}
+{% block content %}
+
+
+
+<form action="" method ="POST" class="key" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    
+    <div class="para">
+        <a>number of keys :</a>
+        <input type="number" id="number" name ="keys" value="0" onclick="fixValue()"> </input>
+
+        <div class="fields">
+            
+            <a>number of fields :</a>
+            <input type="number" id="number" name ="fields" value="0" onclick="fixValue()"> </input>
+        </div>
+        <div class="numbers">
+            <a>Length of field :</a>
+            <input type="number" id="number" value="0" name="length" onclick="fixValue()"> </input>
+        </div>
+
+        
+
+        <div id="lettersornumbers">
+            <input type="radio" id="huey" name="drone" value="letters" onclick="showupper()" checked>
+            <label for="huey">Letters</label>
+
+            <input type="radio" id="huey" name="drone" value="numbers" onclick="hideupper()" checked>
+            <label for="huey">Numbers</label>
+            
+            <input type="radio" id="huey" name="drone" value="both" onclick="showupper()" checked>
+            <label for="huey">Both </label>
+
+        </div>
+
+        <div id="upper">
+            <input type="radio" id="huey" name="drone1" value="upper"
+                   checked>
+            <label for="huey">Uppercase</label>
+           
+            <input type="radio" id="huey" name="drone1" value="lower"  checked>
+            <label for="huey">Lowercase</label>
+            
+            <input type="radio" id="huey" name="drone1" value="both" checked>
+            <label for="huey">Both</label>
+
+        </div>
+
+        <div id="qr">
+            <input type="checkbox" id="vehicle1" name="qr" value="yes">
+            <label for="vehicle1"> Get QR code </label>
+        </div>
+        <div id="">
+            <input type="checkbox" id="vehicle1" name="getfile" value="yes" onclick="showfiletype()">
+            <label for="vehicle1"> Get in file </label>
+            <label for="cars" id="filetype1"> Choose a file format: </label>
+                <select name="cars" id="filetype" onclick="showdownload()">
+                    <option value="volvo">JSON</option>
+                    <option value="saab">Excel</option>
+                    <option value="saab">.txt file</option>
+                </select>
+           
+
+        </div>
+    </div> 
+    
+    <input type="file" name="myfile" value="upload file" />
+    <button type="submit" class="btn btn-warning" id="io">Generate key</button>
+
+    
+    {% if multiple  %}
+    
+    <ul id="keyfield">    
+        {% for key in all_keys %}
+        
+            <li>
+                <a  > {{ key }} </a>
+            </li>
+       
+        {% endfor %} 
+    </ul> 
+    
+    {% else %}
+        
+        <a id="keyfield"> {{ key }} </a>
+    {% endif %}
+    
+    <img src="{{image_path}}" alt="..." class="img-thumbnail">
+
+
+
+</form>
+
+<div class="btn-group">
+    <a type="button" class="btn btn-primary" id="download-btn" href="{% static 'hh.odt  ' %}"> Download Keys in : </a>
+    <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <span class="sr-only">Toggle Dropdown</span>
+      
+    </button>
+    <div class="dropdown-menu">
+      <a class="dropdown-item" href="#" onclick="changedownloadtextJSON()">JSON </a>
+      <a class="dropdown-item" href="#" onclick="changedownloadtextExcel()">Excel</a>
+      <a class="dropdown-item" href="#" onclick="changedownloadtexttxt()">.txt file  </a>
+      <!--<div class="dropdown-divider"></div>
+      <a class="dropdown-item" href="#">Separated link</a>-->
+    </div>
+  </div>
+
+
+
+
+
+
+<script>
+    
+document.getElementById("vehicle1").checked = true;
+document.getElementById("filetype1").style.visibility = "hidden";
+document.getElementById("filetype").style.visibility = "hidden";
+document.getElementById("filedownload").style.visibility = "hidden";
+
+
+function changedownloadtextJSON() {
+    
+    document.getElementById("download-btn").innerHTML = "Download Keys in : JSON"
+}
+
+function changedownloadtextExcel() {
+    
+    document.getElementById("download-btn").innerHTML = "Download Keys in : Excel"
+}
+
+function changedownloadtexttxt() {
+    
+    document.getElementById("download-btn").innerHTML = "Download Keys in : .txt file"
+}
+
+
+
+
+function showfiletype() {
+    document.getElementById("filetype1").style.visibility = "visible"; //label
+    document.getElementById("filetype").style.visibility = "visible"; //options
+    document.getElementById("filedownload").style.visibility = "visible";
+}
+
+function showdownload() {
+    document.getElementById("filedownload").style.visibility = "visible";
+}
+function increaseValue() {
+  var value = parseInt(document.getElementById('number').value, 10);
+  value = isNaN(value) ? 0 : value;
+  value++;
+  document.getElementById('number').value = value;
+}
+
+
+function hideupper(){
+    //var value = String(document.getElementById('lettersornumbers').value);
+    //if (value == "Numbers") {
+    var elemnt = document.getElementById('upper');
+    elemnt.style.visibility = "hidden"
+  
+}
+
+function showupper(){
+    var elemnt = document.getElementById('upper');
+    elemnt.style.visibility = "visible"
+}
+
+function fixValue() {
+  var value = parseInt(document.getElementById('number').value, 10);
+  value = isNaN(value) ? 0 : value;
+  value < 1 ? value = 1 : '';
+  document.getElementById('number').value = value;
+}
+
+
+function decreaseValue() {
+  var value = parseInt(document.getElementById('number').value, 10);
+  value = isNaN(value) ? 0 : value;
+  value < 1 ? value = 1 : '';
+  value--;
+  document.getElementById('number').value = value;
+}
+
+
+</script>
+
+
+{% endblock %}
