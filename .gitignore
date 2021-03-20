@@ -1,2 +1,4 @@
-/keys/settings.py
-/venv
+keys/settings.py
+venv/*
+db.sqlite3
+**/logs
