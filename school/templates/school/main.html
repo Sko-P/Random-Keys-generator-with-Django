@@ -1,0 +1,270 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    
+<script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js" integrity="sha512-hZf9Qhp3rlDJBvAKvmiG+goaaKRZA6LKUO35oK6EsM0/kjPK32Yw7URqrq3Q+Nvbbt8Usss+IekL7CRn83dYmw==" crossorigin="anonymous"></script>
+
+<script type="text/javascript"> window.CSRF_TOKEN = "{{ csrf_token }}"; </script>
+<title>
+    Main page
+</title>
+
+<link rel="stylesheet" type="text/css" href="{% static '/css/main.css' %}">
+
+</head>
+
+<body>
+<div class='row'>
+    <div class="col-sm-6">
+        <canvas id="myChart" width="400" height="400"></canvas>
+    </div>
+    <div class="col-sm-6">
+        <canvas id="myChart2" width="400" height="400"></canvas>
+    </div>
+</div>
+
+
+
+{% block content %} 
+
+{% endblock %}
+
+<h5> Footer</h5>
+
+
+
+
+
+
+</body>
+</html>
+
+
+<script>
+    var state = {
+        'items':[],
+        'values':[]
+    }
+    
+    a = []
+
+    b = []
+
+    var dataURL = "/chart/getdata/data"
+    /*
+    $.ajax({
+        method:'GET',
+        url:dataURL,
+
+        success:function(response){
+            console.log('RESPONSE', response)
+            for (var i in response){
+                var key = Object.keys(response[i])[0]
+                var value = Object.values(response[i])[0]
+
+                state.items.push(key)
+                state.values.push(value)
+            }
+            console.log('STATE',state)
+            buildChart()
+        }
+
+        
+
+    })*/
+
+    $.ajax({
+        method:'GET',
+        url:dataURL,
+
+        success:function(response){
+            var j = 0
+            for(var i in response){
+                
+                var value = Object.values(response[i])
+                
+                if(j%2 == 0){
+                    state.items = value
+                }else{
+                    state.values = value
+                }
+                j=j+1
+                
+            }
+
+            console.log(state)
+            /*
+            a = response.x
+            b = response.y
+            console.log(b)
+            */
+            buildjs()
+        }
+
+    })
+
+    datato= {
+        
+        "title" : "Locking",
+        "author" : "Danver"
+
+    }
+
+    /* THIS NEEDS MORE WORKING AS THE TOKEN IS INSCURE AND CAN BE CAPTURED */
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+    console.log(csrftoken)
+    
+
+    //const request = new Request("/chart/apigeneric/",{headers: {'X-CSRFToken': csrftoken}});
+    
+
+    $.ajax({
+        method:'POST',
+        url:"//127.0.0.1:8000/chart/apigeneric/",
+        headers: {'X-CSRFToken': csrftoken},
+        data : datato
+        
+       
+    })
+
+/*
+    fetch(request, {
+        method: 'POST',
+        mode: 'same-origin'  // Do not send CSRF token to another domain.
+    }).then(function(response) {
+        console.log("done")
+    });
+*/
+
+    function buildChart()
+    {
+        var chardata = {
+        "type":"bar",
+        "scale-x":{
+            "values":state.items
+        },
+        "series":[
+            {
+                "values":state.values
+            }
+        ]
+    }
+    /*
+        zingchart.render({
+            id:"mychart",
+            data:chardata,
+
+        });
+        */
+    }
+    
+
+
+//chart.js
+
+function buildjs(){
+    
+    var ctx = document.getElementById('myChart');
+    var ctx2 = document.getElementById('myChart2');
+    var myChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: state.values,
+            datasets: [{
+                label: '# of Votes',
+                data: state.items,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+    var myChart = new Chart(ctx2, {
+        type: 'line',
+        data: {
+            labels: state.values,
+            datasets: [{
+                label: '# of Votes',
+                data: state.items,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+}
+
+
+
+</script>

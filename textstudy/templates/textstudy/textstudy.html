@@ -1,0 +1,43 @@
+
+
+{%  extends 'textstudy/main.html' %}
+
+{% load static %}
+{% block content %}
+
+
+
+<form action="" method ="POST" class="key" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="form-group">
+        <label for="exampleFormControlTextarea1"> Text to analyze </label>
+        <textarea class="form-control" id="exampleFormControlTextarea1" rows="9" name="text_area"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary"> Analyze </button>
+
+</form>
+
+{{aa}}
+
+<a id="number-words">  Number of words : {{ nb }} </a>
+
+
+
+<script>
+
+
+function decreaseValue() {
+  var value = parseInt(document.getElementById('number').value, 10);
+  value = isNaN(value) ? 0 : value;
+  value < 1 ? value = 1 : '';
+  value--;
+  document.getElementById('number').value = value;
+}
+
+
+</script>
+
+
+{% endblock %}

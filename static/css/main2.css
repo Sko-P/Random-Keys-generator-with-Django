@@ -1,0 +1,10 @@
+.form-control {
+    width : 20%;
+  
+}
+
+a,#number-words {
+    position : absolute;
+    right : 60%;
+    top : 10%;
+}

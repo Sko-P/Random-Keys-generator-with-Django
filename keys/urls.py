@@ -21,7 +21,11 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('rand.urls') )
+    path('', include('rand.urls') ),
+    path('text/',include('textstudy.urls')),
+    path('chart/',include('chart.urls')),
+    path('api-auth/', include('rest_framework.urls')),
+    path('school/', include('school.urls'))
 ]
 
 

@@ -24,7 +24,7 @@ img {
     border-color: white;
 }
 
-.key #number {
+.key #nb_keys, #nb_field, #length {
     position : absolute;
     width : 45px;
     height : 20px;

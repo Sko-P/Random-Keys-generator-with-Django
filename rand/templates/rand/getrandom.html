@@ -13,16 +13,16 @@
     
     <div class="para">
         <a>number of keys :</a>
-        <input type="number" id="number" name ="keys" value="0" onclick="fixValue()"> </input>
+        <input type="number" id="nb_keys" name ="keys" value="0" onclick="fixValue()"> </input>
 
         <div class="fields">
             
             <a>number of fields :</a>
-            <input type="number" id="number" name ="fields" value="0" onclick="fixValue()"> </input>
+            <input type="number" id="nb_field" name ="fields" value="0" onclick="fixValue()"> </input>
         </div>
         <div class="numbers">
             <a>Length of field :</a>
-            <input type="number" id="number" value="0" name="length" onclick="fixValue()"> </input>
+            <input type="number" id="length" value="0" name="length" onclick="fixValue()"> </input>
         </div>
 
         
@@ -53,24 +53,16 @@
         </div>
 
         <div id="qr">
-            <input type="checkbox" id="vehicle1" name="qr" value="yes">
-            <label for="vehicle1"> Get QR code </label>
+            <input type="checkbox" id="vehicle1" name="qr" value="yes" onclick="hideqr()">
+            <label for="vehicle1" onclick=""> Get QR code </label>
         </div>
-        <div id="">
-            <input type="checkbox" id="vehicle1" name="getfile" value="yes" onclick="showfiletype()">
-            <label for="vehicle1"> Get in file </label>
-            <label for="cars" id="filetype1"> Choose a file format: </label>
-                <select name="cars" id="filetype" onclick="showdownload()">
-                    <option value="volvo">JSON</option>
-                    <option value="saab">Excel</option>
-                    <option value="saab">.txt file</option>
-                </select>
+
            
 
         </div>
     </div> 
     
-    <input type="file" name="myfile" value="upload file" />
+    <!--<input type="file" name="myfile" value="upload file" />-->
     <button type="submit" class="btn btn-warning" id="io">Generate key</button>
 
     
@@ -91,14 +83,14 @@
         <a id="keyfield"> {{ key }} </a>
     {% endif %}
     
-    <img src="{{image_path}}" alt="..." class="img-thumbnail">
+    <img src="{{image_path}}" id="qr_image" alt="..." class="img-thumbnail">
 
 
 
 </form>
 
 <div class="btn-group">
-    <a type="button" class="btn btn-primary" id="download-btn" href="{% static 'hh.odt  ' %}"> Download Keys in : </a>
+    <a type="button" class="btn btn-primary" id="download-btn" href="" data-toggle="popover" data-placement="left" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." > Download Keys in : </a>
     <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       <span class="sr-only">Toggle Dropdown</span>
       
@@ -118,26 +110,50 @@
 
 
 <script>
-    
+
+$(function () {
+  $('.example-popover').popover({
+    container: 'body'
+  })
+})
+/* Seeting the default values for the number fields */
+
+
+document.getElementById("nb_keys").value = 1;
+document.getElementById("nb_field").value = 2;
+document.getElementById("length").value = 4;
+
 document.getElementById("vehicle1").checked = true;
 document.getElementById("filetype1").style.visibility = "hidden";
 document.getElementById("filetype").style.visibility = "hidden";
 document.getElementById("filedownload").style.visibility = "hidden";
 
+function hideqr(){
+var check_qr = document.getElementById("vehicle1")
+var qr = document.getElementById("qr_image");
+if(check_qr.checked==false){
+    qr.style.visibility = "hidden"
+}
+else
+{
+    qr.style.visibility = "visible"
+}
+
+}
 
 function changedownloadtextJSON() {
     
-    document.getElementById("download-btn").innerHTML = "Download Keys in : JSON"
+    document.getElementById("download-btn").innerHTML = "Download Keys in : <b>JSON</b>"
 }
 
 function changedownloadtextExcel() {
     
-    document.getElementById("download-btn").innerHTML = "Download Keys in : Excel"
+    document.getElementById("download-btn").innerHTML = "Download Keys in : <b>Excel</b>"
 }
 
 function changedownloadtexttxt() {
     
-    document.getElementById("download-btn").innerHTML = "Download Keys in : .txt file"
+    document.getElementById("download-btn").innerHTML = "Download Keys in : <b>.txt file</b>"
 }
 
 
