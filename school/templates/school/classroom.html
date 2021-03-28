@@ -1,0 +1,61 @@
+{%  extends 'school/main.html' %}
+
+{% load static %}
+{% block content %}
+
+
+
+{% for student in students %}
+    <a href="{% url 'student' pk=student.classroom.classr name=student.name %}">{{student.name}}</a> <br>
+{% endfor %}
+
+
+
+<script>
+
+
+    function getLastNumber(url) {
+        var matches = url.match(/\d+/g);
+    return matches[matches.length - 1];
+    }
+    //BuildTable()
+    function BuildTable()
+    {
+        //var wrapper = document.getElementById('list-wrapper')
+        var actual_class = getLastNumber(window.location.href)
+        var url = "http://127.0.0.1:8000/school/studentsapi"
+        console.log(url)
+    
+    
+        fetch(url)
+        .then((resp) => resp.json())
+        .then(function(data){
+            console.log('Data',data)
+    
+            var students = []
+            var all_students = data
+            for(var std in all_students)0
+            {
+
+            }
+            
+    
+            for (var clas in classes){
+                var item = `
+                
+    
+                
+                <a href="">${classes[clas].pallier} ${classes[clas].typeclass} ${classes[clas].classr}</a>
+                <br>
+                `           
+                wrapper.innerHTML += item
+            
+            }
+    
+    
+        })
+        
+    }
+    
+    </script>
+{% endblock %}

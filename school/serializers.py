@@ -24,7 +24,14 @@ class ArticleSerializer(serializers.Serializer):
         return instance
 """
 
-class ArticleSerializer(serializers.ModelSerializer): #A better visual than the first one
+class ClassroomSerializer(serializers.ModelSerializer): #A better visual than the first one
     class Meta:
-        model = Article
-        fields = ['id', 'title', 'author']
+        model = Classroom
+        fields = "__all__"
+
+class StudentSerializer(serializers.ModelSerializer): #A better visual than the first one
+    class Meta:
+        model = Student
+        fields = "__all__"
+
+

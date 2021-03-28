@@ -1,1 +1,59 @@
-Works
+
+
+{%  extends 'school/main.html' %}
+
+{% load static %}
+{% block content %}
+
+
+
+{% for class in classrooms %}
+
+    <a href="{% url 'classroom' pk=class.id %}">{{class.pallier}} {{class.typeclass}} {{class.classr}}</a> <br>
+
+{%endfor%}
+
+<div id = 'list-wrapper'>
+</div>
+
+
+
+<script>
+
+
+
+//BuildTable()
+function BuildTable()
+{
+    var wrapper = document.getElementById('list-wrapper')
+    var url = "http://127.0.0.1:8000/school/classroomsapi"
+
+
+    fetch(url)
+    .then((resp) => resp.json())
+    .then(function(data){
+        console.log('Data',data)
+
+
+        var classes = data
+
+        for (var clas in classes){
+            var item = `
+            
+
+            
+            <a href="">${classes[clas].pallier} ${classes[clas].typeclass} ${classes[clas].classr}</a>
+            <br>
+            `           
+            wrapper.innerHTML += item
+        
+        }
+
+
+    })
+    
+}
+
+</script>
+
+{%endblock%}

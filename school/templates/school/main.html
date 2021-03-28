@@ -24,16 +24,9 @@
 </head>
 
 <body>
-<div class='row'>
-    <div class="col-sm-6">
-        <canvas id="myChart" width="400" height="400"></canvas>
-    </div>
-    <div class="col-sm-6">
-        <canvas id="myChart2" width="400" height="400"></canvas>
-    </div>
-</div>
 
 
+{% include 'school/navbar.html' %}
 
 {% block content %} 
 
@@ -51,75 +44,6 @@
 
 
 <script>
-    var state = {
-        'items':[],
-        'values':[]
-    }
-    
-    a = []
-
-    b = []
-
-    var dataURL = "/chart/getdata/data"
-    /*
-    $.ajax({
-        method:'GET',
-        url:dataURL,
-
-        success:function(response){
-            console.log('RESPONSE', response)
-            for (var i in response){
-                var key = Object.keys(response[i])[0]
-                var value = Object.values(response[i])[0]
-
-                state.items.push(key)
-                state.values.push(value)
-            }
-            console.log('STATE',state)
-            buildChart()
-        }
-
-        
-
-    })*/
-
-    $.ajax({
-        method:'GET',
-        url:dataURL,
-
-        success:function(response){
-            var j = 0
-            for(var i in response){
-                
-                var value = Object.values(response[i])
-                
-                if(j%2 == 0){
-                    state.items = value
-                }else{
-                    state.values = value
-                }
-                j=j+1
-                
-            }
-
-            console.log(state)
-            /*
-            a = response.x
-            b = response.y
-            console.log(b)
-            */
-            buildjs()
-        }
-
-    })
-
-    datato= {
-        
-        "title" : "Locking",
-        "author" : "Danver"
-
-    }
-
     /* THIS NEEDS MORE WORKING AS THE TOKEN IS INSCURE AND CAN BE CAPTURED */
     function getCookie(name) {
         let cookieValue = null;
@@ -139,132 +63,6 @@
     const csrftoken = getCookie('csrftoken');
     console.log(csrftoken)
     
-
-    //const request = new Request("/chart/apigeneric/",{headers: {'X-CSRFToken': csrftoken}});
-    
-
-    $.ajax({
-        method:'POST',
-        url:"//127.0.0.1:8000/chart/apigeneric/",
-        headers: {'X-CSRFToken': csrftoken},
-        data : datato
-        
-       
-    })
-
-/*
-    fetch(request, {
-        method: 'POST',
-        mode: 'same-origin'  // Do not send CSRF token to another domain.
-    }).then(function(response) {
-        console.log("done")
-    });
-*/
-
-    function buildChart()
-    {
-        var chardata = {
-        "type":"bar",
-        "scale-x":{
-            "values":state.items
-        },
-        "series":[
-            {
-                "values":state.values
-            }
-        ]
-    }
-    /*
-        zingchart.render({
-            id:"mychart",
-            data:chardata,
-
-        });
-        */
-    }
-    
-
-
-//chart.js
-
-function buildjs(){
-    
-    var ctx = document.getElementById('myChart');
-    var ctx2 = document.getElementById('myChart2');
-    var myChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: state.values,
-            datasets: [{
-                label: '# of Votes',
-                data: state.items,
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            }
-        }
-    });
-    var myChart = new Chart(ctx2, {
-        type: 'line',
-        data: {
-            labels: state.values,
-            datasets: [{
-                label: '# of Votes',
-                data: state.items,
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            }
-        }
-    });
-}
-
 
 
 </script>
