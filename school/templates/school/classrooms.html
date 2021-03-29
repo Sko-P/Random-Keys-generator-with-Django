@@ -6,14 +6,19 @@
 {% block content %}
 
 
-
+<table>
+   
 {% for class in classrooms %}
-
-    <a href="{% url 'classroom' pk=class.id %}">{{class.pallier}} {{class.typeclass}} {{class.classr}}</a> <br>
-
+<tr>
+<td>
+    <a href="{% url 'classroom' pk=class.id %}">{{class.pallier}} {{class.typeclass}} {{class.classr}}</a>
+</td>
+</tr>
 {%endfor%}
 
+</table>
 <div id = 'list-wrapper'>
+    
 </div>
 
 

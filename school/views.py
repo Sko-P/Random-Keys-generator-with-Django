@@ -30,7 +30,7 @@ from .models import *
 from .decorators import unauthenticated_user, allowed_users, admin_only
 
 # Create your views here.
-
+@login_required(login_url='login')
 def mainpage(request):
 
     return render(request, "school/main.html")
@@ -39,9 +39,9 @@ def mainpage(request):
 def loginpage(request):
 
     if(request.user.is_authenticated):
-        return redirect('rooms')
+        return redirect('classrooms')
     else:
-
+        
         if request.method == "POST":
             username = request.POST.get('username')
             password = request.POST.get('password')
@@ -54,7 +54,7 @@ def loginpage(request):
                 
                 if(group == "teachers" or group == "supervisors" or group == "leaders"):
                     
-                    return redirect('rooms')
+                    return redirect('classrooms')
 
                 else:
                    
@@ -66,6 +66,14 @@ def loginpage(request):
         context = {}
 
         return render(request, 'school/login.html', context)
+
+
+
+def logoutUser(request):
+
+    logout(request)
+    return redirect('login')
+
 
 """
 Supervisor are allowed to see the classrooms they are concerned by
@@ -83,11 +91,10 @@ def showclassrooms(request):
     if(group == "teachers"): #their classes
         # VERY IMPORTANT : the 'classroom' in classroom_set references the classroom table the teacher is related to thourgh foreignkey
         #So there is a need to mention there the table you would to get the rows from
-        classrooms = request.user.teacher.classroom_set.all() #classroom is written in lowercase for the query
-
+        classrooms = request.user.teacher.classr.all()
     elif(group == "supervisors"):
-        classrooms = request.user.supervisor.classroom_set.all() 
-        
+        classrooms = request.user.supervisor.classroom_set.all() #This is correct because the supervisor hasn't a Classroom field
+        print(classrooms)
     else: #all the leader case
         classrooms = Classroom.objects.all()
 
@@ -101,29 +108,71 @@ def showclassrooms(request):
 
     return render(request, "school/classrooms.html", context)
 
-def logoutUser(request):
-
-    logout(request)
-    return redirect('login')
-
 
 @login_required(login_url='login')
 @allowed_users(["teachers", "supervisors", "leaders", "students"])
 def showclassroom(request, pk):
+    """
+    print(request.user.student)
+    print(Student.objects.filter(classroom=pk))
+    print(request.user.student not in Student.objects.filter(classroom=pk))
+    print(request.user.student.classroom.id)
+    """
+    if(request.user.groups.all()[0].name == "students"):
+       
+        if(request.user.student not in Student.objects.filter(classroom=pk)):
+            return redirect('classroom', pk=request.user.student.classroom.id)
+    elif(request.user.groups.all()[0].name == "teachers"):
+        classrooms = request.user.teacher.classr.all()
+        print("Teacher", classrooms)
+        if(Classroom.objects.get(id=pk) not in classrooms):
+            
+            return redirect('classrooms')
+
     students = Student.objects.filter(classroom=pk) #.object is when you get one result back only (one to one). This case is many to many
-    print(students)
+    #print(students)
     return render(request, "school/classroom.html", {"students" : students})
 
-
+@login_required(login_url='login')
+@allowed_users(["teachers", "supervisors", "leaders", "students"])
 def showstudent(request, pk, name):
 
     print(pk,name)
     student = Student.objects.get(classroom = pk, name = name)
     print(student)
     
+   
+    #print(Mark._meta.fields[0].name)
 
+    note_object = student.marks
 
-    return render(request, "school/student.html", {"student": student})
+    names = []
+    for i in Mark._meta.fields:
+        if(i.name != "id"):
+            names.append(i.name)
+
+    field_value = []
+    for i in names:
+        field_value.append(getattr(note_object, i))
+
+    print(field_value)
+
+    global_score = 0
+
+    for i in field_value:
+        global_score += i
+
+    global_score /= len(field_value)
+    print(global_score)
+
+    context = {
+        "student": student,
+        "fieldnames" : names,
+        'fieldvalues' : field_value,
+        'global_score' : global_score
+        
+        }
+    return render(request, "school/student.html", context)
 
 class Classrooms_GenericAPIView(generics.GenericAPIView, mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     serializer_class = ClassroomSerializer

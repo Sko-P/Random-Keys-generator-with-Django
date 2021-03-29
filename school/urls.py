@@ -13,7 +13,7 @@ urlpatterns = [
 
     #Pages
     path('',mainpage,name="main"),
-    path('classrooms/', showclassrooms,name="rooms"),
+    path('classrooms/', showclassrooms,name="classrooms"),
     path('classrooms/<int:pk>',showclassroom, name="classroom"),
     path('classrooms/<int:pk>/<str:name>', showstudent, name="student"),
     path('login/', loginpage, name="login"),

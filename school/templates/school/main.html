@@ -14,12 +14,12 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js" integrity="sha512-hZf9Qhp3rlDJBvAKvmiG+goaaKRZA6LKUO35oK6EsM0/kjPK32Yw7URqrq3Q+Nvbbt8Usss+IekL7CRn83dYmw==" crossorigin="anonymous"></script>
 
-<script type="text/javascript"> window.CSRF_TOKEN = "{{ csrf_token }}"; </script>
+
 <title>
     Main page
 </title>
 
-<link rel="stylesheet" type="text/css" href="{% static '/css/main.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static '/css/main3.css' %}">
 
 </head>
 
@@ -28,11 +28,16 @@
 
 {% include 'school/navbar.html' %}
 
+
+
 {% block content %} 
+
+
+{% include 'school/footer.html' %}
 
 {% endblock %}
 
-<h5> Footer</h5>
+
 
 
 
@@ -40,6 +45,7 @@
 
 
 </body>
+
 </html>
 
 

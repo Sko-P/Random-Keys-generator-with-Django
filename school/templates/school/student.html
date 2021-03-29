@@ -5,10 +5,57 @@
 {% load static %}
 
 
-
-
 {% block content %}
 
-{{student}}
+<img id="student-pic" src="{{student.profile_pic.url}}" alt="..." class="img-thumbnail">
+
+<div id="student-info">
+    <a> First name : {{ student.name}}</a><br>
+    <a> Family name : {{ student.family_name}}</a><br>
+    <a> Parents phone : {{ student.phone}}</a><br>
+    <a> Parents mail : {{ student.email}}</a><br>
+    <a> Date of Birth : {{ student.date}}</a>
+    
+</div>
+
+
+<div id="student-classroom">
+  <a href = "{% url 'classroom' pk=student.classroom.id %}" >{{student.classroom}}</a>
+</div>
+
+
+
+{% if request.user.student.id == student.id or request.user.groups.all.0.name == 'teachers' or request.user.groups.all.0.name == 'leaders' %}
+<!-- Personal data to hide -->
+<table class="table table-bordered" id="student-marks">
+    <thead>
+      <tr>
+          {% for field in fieldnames %}
+
+          <th scope="col"> {{ field }} </th>
+
+          {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        {% for value in fieldvalues %}
+            {% if value < 10.0 %}
+                <th scope="row" class="bg-danger" >{{ value }}</th>
+            {% else %}
+            <th scope="row" class="" >{{ value }}</th>
+            {% endif %}
+        {% endfor %}
+      </tr>
+      
+    </tbody>
+  </table>
+  
+
+  <div id="student-gmark">
+        <a>Global Score : {{ global_score }} </a>
+  </div>
+
+{% endif %}
 
 {%endblock%}
